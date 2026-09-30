@@ -76,7 +76,7 @@ fn insert_prevouts(
             OutPoint::new(prev_txid, prev_vout),
             TxOut {
                 script_pubkey: prev_txout.scriptpubkey,
-                value: Amount::from_sat(prev_txout.value),
+                value: prev_txout.value,
             },
         );
     }

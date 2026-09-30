@@ -6,7 +6,7 @@ use bdk_core::{
     bitcoin::{BlockHash, OutPoint, Txid},
     BlockId, CheckPoint, ConfirmationBlockTime, Indexed, TxUpdate,
 };
-use esplora_client::{OutputStatus, Tx};
+use esplora_client::OutputStatus;
 use std::thread::JoinHandle;
 
 use crate::{insert_anchor_or_seen_at_from_status, insert_prevouts};
@@ -279,7 +279,7 @@ fn fetch_txs_with_keychain_spks<I: Iterator<Item = Indexed<SpkWithExpectedTxids>
     stop_gap: usize,
     parallel_requests: usize,
 ) -> Result<(TxUpdate<ConfirmationBlockTime>, Option<u32>), Error> {
-    type TxsOfSpkIndex = (u32, Vec<esplora_client::Tx>, HashSet<Txid>);
+    type TxsOfSpkIndex = (u32, Vec<esplora_client::api::EsploraTx>, HashSet<Txid>);
 
     let mut update = TxUpdate::<ConfirmationBlockTime>::default();
     let mut last_active_index = Option::<u32>::None;
@@ -300,7 +300,7 @@ fn fetch_txs_with_keychain_spks<I: Iterator<Item = Indexed<SpkWithExpectedTxids>
                     let mut last_txid = None;
                     let mut spk_txs = Vec::new();
                     loop {
-                        let txs = client.scripthash_txs(&spk, last_txid)?;
+                        let txs = client.get_scripthash_txs(&spk, last_txid)?;
                         let tx_count = txs.len();
                         last_txid = txs.last().map(|tx| tx.txid);
                         spk_txs.extend(txs);
