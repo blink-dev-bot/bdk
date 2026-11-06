@@ -3,7 +3,7 @@ use bdk_chain::local_chain::LocalChain;
 use bdk_chain::spk_client::{FullScanRequest, SyncRequest};
 use bdk_chain::spk_txout::SpkTxOutIndex;
 use bdk_chain::{ConfirmationBlockTime, IndexedTxGraph, TxGraph};
-use bdk_esplora::esplora_client::{self, Builder};
+use bdk_esplora::esplora_client::Builder;
 use bdk_esplora::EsploraAsyncExt;
 use bdk_testenv::bitcoind::{Input, Output};
 use bdk_testenv::{anyhow, TestEnv};
