@@ -10,4 +10,5 @@ set -euo pipefail
 # cargo clean
 # rustup override set 1.85.0
 
-# No dependency overrides are currently required.
+# Pin dependencies that have raised their MSRV above 1.85.0.
+cargo update -p proptest --precise "1.7.0"

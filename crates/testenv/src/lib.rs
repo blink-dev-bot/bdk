@@ -438,7 +438,7 @@ mod test {
         // Mine some blocks.
         env.mine_blocks(101, None)?;
         env.wait_until_electrum_sees_block(Duration::from_secs(6))?;
-        let height = env.bitcoind.client.get_block_count()?.into_model().0;
+        let height = env.bitcoind.client.get_block_count()?.0;
         let blocks = (0..=height)
             .map(|i| env.bitcoind.client.get_block_hash(i))
             .collect::<Result<Vec<_>, _>>()?;
@@ -446,7 +446,7 @@ mod test {
         // Perform reorg on six blocks.
         env.reorg(6)?;
         env.wait_until_electrum_sees_block(Duration::from_secs(6))?;
-        let reorged_height = env.bitcoind.client.get_block_count()?.into_model().0;
+        let reorged_height = env.bitcoind.client.get_block_count()?.0;
         let reorged_blocks = (0..=height)
             .map(|i| env.bitcoind.client.get_block_hash(i))
             .collect::<Result<Vec<_>, _>>()?;
