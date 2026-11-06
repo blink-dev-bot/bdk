@@ -37,13 +37,11 @@ pub struct Config<'a> {
 }
 
 impl Default for Config<'_> {
-    /// Use the default configuration, enable bitcoind's P2P port for electrs, and set
-    /// `http_enabled = true` for [`electrsd::Conf`] as required by `bdk_esplora` tests.
+    /// Use the default configuration plus set `http_enabled = true` for [`electrsd::Conf`]
+    /// which is required for testing `bdk_esplora`.
     fn default() -> Self {
-        let mut bitcoind = bitcoind::Conf::default();
-        bitcoind.p2p = bitcoind::P2P::Yes;
         Self {
-            bitcoind,
+            bitcoind: bitcoind::Conf::default(),
             electrsd: {
                 let mut conf = electrsd::Conf::default();
                 conf.http_enabled = true;
