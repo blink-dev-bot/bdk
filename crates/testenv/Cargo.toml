@@ -17,7 +17,7 @@ workspace = true
 
 [dependencies]
 bdk_chain = { path = "../chain", version = "0.23.1", default-features = false }
-electrsd = { version = "0.43.2", features = [ "legacy" ], default-features = false }
+electrsd = { version = "0.43.2", features = [ "electrs_0_10_6", "legacy" ], default-features = false }
 bitcoin = { version = "0.32.0", default-features = false }
 
 [dev-dependencies]
