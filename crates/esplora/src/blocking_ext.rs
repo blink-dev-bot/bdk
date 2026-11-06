@@ -14,10 +14,7 @@ use crate::{insert_anchor_or_seen_at_from_status, insert_prevouts};
 /// [`esplora_client::Error`]
 pub type Error = Box<esplora_client::Error>;
 
-#[cfg(not(target_arch = "wasm32"))]
 type EsploraTx = esplora_client::api::EsploraTx;
-#[cfg(target_arch = "wasm32")]
-type EsploraTx = esplora_client::Tx;
 
 /// Trait to extend the functionality of [`esplora_client::BlockingClient`].
 ///
@@ -305,10 +302,7 @@ fn fetch_txs_with_keychain_spks<I: Iterator<Item = Indexed<SpkWithExpectedTxids>
                     let mut last_txid = None;
                     let mut spk_txs = Vec::new();
                     loop {
-                        #[cfg(not(target_arch = "wasm32"))]
                         let txs = client.get_scripthash_txs(&spk, last_txid)?;
-                        #[cfg(target_arch = "wasm32")]
-                        let txs = client.scripthash_txs(&spk, last_txid)?;
                         let tx_count = txs.len();
                         last_txid = txs.last().map(|tx| tx.txid);
                         spk_txs.extend(txs);
