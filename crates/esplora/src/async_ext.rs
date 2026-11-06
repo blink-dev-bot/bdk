@@ -15,6 +15,11 @@ use crate::{insert_anchor_or_seen_at_from_status, insert_prevouts};
 /// [`esplora_client::Error`]
 type Error = Box<esplora_client::Error>;
 
+#[cfg(not(target_arch = "wasm32"))]
+type EsploraTx = esplora_client::api::EsploraTx;
+#[cfg(target_arch = "wasm32")]
+type EsploraTx = esplora_client::Tx;
+
 /// Trait to extend the functionality of [`esplora_client::AsyncClient`].
 ///
 /// Refer to [crate-level documentation](crate) for more.
@@ -311,7 +316,7 @@ where
     I: Iterator<Item = Indexed<SpkWithExpectedTxids>> + Send,
     S: Sleeper + Clone + Send + Sync,
 {
-    type TxsOfSpkIndex = (u32, Vec<esplora_client::api::EsploraTx>, HashSet<Txid>);
+    type TxsOfSpkIndex = (u32, Vec<EsploraTx>, HashSet<Txid>);
 
     let mut update = TxUpdate::<ConfirmationBlockTime>::default();
     let mut last_active_index = Option::<u32>::None;
@@ -332,7 +337,10 @@ where
                     let mut last_seen = None;
                     let mut spk_txs = Vec::new();
                     loop {
+                        #[cfg(not(target_arch = "wasm32"))]
                         let txs = client.get_scripthash_txs(&spk, last_seen).await?;
+                        #[cfg(target_arch = "wasm32")]
+                        let txs = client.scripthash_txs(&spk, last_seen).await?;
                         let tx_count = txs.len();
                         last_seen = txs.last().map(|tx| tx.txid);
                         spk_txs.extend(txs);

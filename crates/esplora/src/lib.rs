@@ -21,7 +21,14 @@
 //! [`esplora_client::AsyncClient`].
 #![cfg_attr(coverage_nightly, feature(coverage_attribute))]
 
-use bdk_core::bitcoin::{Amount, OutPoint, TxOut, Txid};
+#[cfg(not(target_arch = "wasm32"))]
+extern crate esplora_client_native as esplora_client;
+#[cfg(target_arch = "wasm32")]
+extern crate esplora_client_wasm as esplora_client;
+
+#[cfg(target_arch = "wasm32")]
+use bdk_core::bitcoin::Amount;
+use bdk_core::bitcoin::{OutPoint, TxOut, Txid};
 use bdk_core::{BlockId, ConfirmationBlockTime, TxUpdate};
 use esplora_client::TxStatus;
 
@@ -72,11 +79,15 @@ fn insert_prevouts(
         .into_iter()
         .filter_map(|vin| Some((vin.txid, vin.vout, vin.prevout?)));
     for (prev_txid, prev_vout, prev_txout) in prevouts {
+        #[cfg(target_arch = "wasm32")]
+        let value = Amount::from_sat(prev_txout.value);
+        #[cfg(not(target_arch = "wasm32"))]
+        let value = prev_txout.value;
         update.txouts.insert(
             OutPoint::new(prev_txid, prev_vout),
             TxOut {
                 script_pubkey: prev_txout.scriptpubkey,
-                value: prev_txout.value,
+                value,
             },
         );
     }

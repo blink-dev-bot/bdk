@@ -17,7 +17,6 @@ use electrsd::bitcoind::{TemplateRequest, TemplateRules};
 pub use electrsd;
 pub use electrsd::bitcoind;
 pub use electrsd::bitcoind::anyhow;
-pub use electrsd::corepc_client;
 pub use electrsd::electrum_client;
 use electrsd::electrum_client::ElectrumApi;
 
@@ -109,7 +108,7 @@ impl TestEnv {
         &self.electrsd.client
     }
 
-    /// Exposes the RPC calls from [`corepc_client`].
+    /// Exposes the RPC calls from [`bitcoind`].
     pub fn rpc_client(&self) -> &bitcoind::Client {
         &self.bitcoind.client
     }
