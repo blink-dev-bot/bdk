@@ -22,17 +22,15 @@
 #![cfg_attr(coverage_nightly, feature(coverage_attribute))]
 
 #[cfg(not(target_arch = "wasm32"))]
-extern crate esplora_client_native as esplora_client;
+pub extern crate esplora_client_native as esplora_client;
 #[cfg(target_arch = "wasm32")]
-extern crate esplora_client_wasm as esplora_client;
+pub extern crate esplora_client_wasm as esplora_client;
 
 #[cfg(target_arch = "wasm32")]
 use bdk_core::bitcoin::Amount;
 use bdk_core::bitcoin::{OutPoint, TxOut, Txid};
 use bdk_core::{BlockId, ConfirmationBlockTime, TxUpdate};
 use esplora_client::TxStatus;
-
-pub use esplora_client;
 
 #[cfg(feature = "blocking")]
 mod blocking_ext;
